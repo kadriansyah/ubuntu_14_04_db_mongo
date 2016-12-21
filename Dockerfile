@@ -46,8 +46,10 @@ RUN chown -R mongodb:mongodb /data
 # Bind ip to accept external connections
 RUN sudo sed -i 's/bindIp: 127.0.0.1/bindIp: 0.0.0.0/' /etc/mongod.conf
 
+COPY start_script.sh /home/grumpycat/
+RUN sudo chown grumpycat.grumpycat /home/grumpycat/start_script.sh && sudo chmod 755 /home/grumpycat/start_script.sh
+RUN echo 'export TERM=xterm' >> ~/.bashrc
+
 # Expose port 27017 from the container to the host
 EXPOSE 27017
-
-# Set usr/bin/mongod as the dockerized entry-point application
-ENTRYPOINT ["/usr/bin/mongod"]
+ENTRYPOINT ["./start_script.sh"]
